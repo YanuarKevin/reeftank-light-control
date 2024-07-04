@@ -5,12 +5,7 @@
 #include <WiFiUdp.h>
 #include <TimeLib.h>
 
-WidgetLCD lcd1(V20);
-WidgetLCD lcd2(V21);
-WidgetLCD lcd3(V22);
-WidgetLCD lcd4(V23);
-WidgetLCD lcd5(V24);
-WidgetLCD lcd6(V25);
+WidgetLCD lcd1(V0);
 
 char auth[] = "Vgmoy3JDJnoFyxPRfp7KHFXnr5CBUiMB";
 char ssid[] = "OKE-JON-1";
@@ -23,25 +18,22 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org", 25200, 60000);  // 25200 seconds fo
 #define PWM_PIN_2 13
 #define PWM_PIN_3 14
 
-int pwmValue_1 = 0;
-int pwmValue_2 = 0;
-int pwmValue_3 = 0;
+String pwmValue_1 = 0;
+String pwmValue_2 = 0;
+String pwmValue_3 = 0;
 
-int Pwm_A1 = 0;
-int Pwm_B1 = 0;
-int Pwm_C1 = 0;
-int Pwm_A2 = 0;
-int Pwm_B2 = 0;
-int Pwm_C2 = 0;
-int Pwm_A3 = 0;
-int Pwm_B3 = 0;
-int Pwm_C3 = 0;
-int Pwm_A4 = 0;
-int Pwm_B4 = 0;
-int Pwm_C4 = 0;
-int Pwm_A5 = 0;
-int Pwm_B5 = 0;
-int Pwm_C5 = 0;
+String Pwm_A1 = 0;
+String Pwm_B1 = 0;
+String Pwm_C1 = 0;
+String Pwm_A2 = 0;
+String Pwm_B2 = 0;
+String Pwm_C2 = 0;
+String Pwm_A3 = 0;
+String Pwm_B3 = 0;
+String Pwm_C3 = 0;
+String Pwm_A4 = 0;
+String Pwm_B4 = 0;
+String Pwm_C4 = 0;
 
 float Nilai_Suhu;
 
@@ -115,102 +107,93 @@ void printTime(int pin, BlynkParam param) {
   Serial.println("Waktu Sunset: " + timeSunset);
 }
 
-BLYNK_WRITE(V0) {
-  printTime(0, param);
-}
+//input nilai set suhu
 BLYNK_WRITE(V1) {
-  printTime(1, param);
-}
-BLYNK_WRITE(V2) {
-  printTime(2, param);
-}
-BLYNK_WRITE(V3) {
-  printTime(3, param);
-}
-BLYNK_WRITE(V4) {
-  printTime(4, param);
-}
-
-BLYNK_WRITE(V5) {
-  Pwm_A1 = param.asInt() * 10.23;
-  Serial.print("PWM A1: ");
-  Serial.println(Pwm_A1);
-}
-BLYNK_WRITE(V6) {
-  Pwm_B1 = param.asInt() * 10.23;
-  Serial.print("PWM B1: ");
-  Serial.println(Pwm_B1);
-}
-BLYNK_WRITE(V7) {
-  Pwm_C1 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_C1);
-}
-BLYNK_WRITE(V8) {
-  Pwm_A2 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_A2);
-}
-BLYNK_WRITE(V9) {
-  Pwm_B2 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_B2);
-}
-BLYNK_WRITE(V10) {
-  Pwm_C2 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_C2);
-}
-BLYNK_WRITE(V11) {
-  Pwm_A3 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_A3);
-}
-BLYNK_WRITE(V12) {
-  Pwm_B3 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_B3);
-}
-BLYNK_WRITE(V13) {
-  Pwm_C3 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_C3);
-}
-BLYNK_WRITE(V14) {
-  Pwm_A4 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_A4);
-}
-BLYNK_WRITE(V15) {
-  Pwm_B4 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_B4);
-}
-BLYNK_WRITE(V16) {
-  Pwm_C4 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_C4);
-}
-BLYNK_WRITE(V17) {
-  Pwm_A5 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_A5);
-}
-BLYNK_WRITE(V18) {
-  Pwm_B5 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_B5);
-}
-BLYNK_WRITE(V19) {
-  Pwm_C5 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
-  Serial.println(Pwm_C5);
-}
-BLYNK_WRITE(V26) {
   Nilai_Suhu = param.asFloat();
   Serial.print("SUHU: ");
   Serial.println(Nilai_Suhu, 1);
 }
+
+//input nilai presentase & waktu sunrise
+BLYNK_WRITE(V2) {
+  printTime(0, param);
+}
+BLYNK_WRITE(V6) {
+  Pwm_A1 = param.asInt() * 10.23;
+  Serial.print("PWM A1: ");
+  Serial.println(Pwm_A1);
+}
+BLYNK_WRITE(V7) {
+  Pwm_B1 = param.asInt() * 10.23;
+  Serial.print("PWM B1: ");
+  Serial.println(Pwm_B1);
+}
+BLYNK_WRITE(V8) {
+  Pwm_C1 = param.asInt() * 10.23;
+  Serial.print("PWM C1: ");
+  Serial.println(Pwm_C1);
+}
+
+//input nilai presentase & waktu day light
+BLYNK_WRITE(V3) {
+  printTime(1, param);
+}
+BLYNK_WRITE(V9) {
+  Pwm_A2 = param.asInt() * 10.23;
+  Serial.print("PWM C1: ");
+  Serial.println(Pwm_A2);
+}
+BLYNK_WRITE(V10) {
+  Pwm_B2 = param.asInt() * 10.23;
+  Serial.print("PWM C1: ");
+  Serial.println(Pwm_B2);
+}
+BLYNK_WRITE(V11) {
+  Pwm_C2 = param.asInt() * 10.23;
+  Serial.print("PWM C1: ");
+  Serial.println(Pwm_C2);
+}
+
+//input nilai presentase & waktu sunrise
+BLYNK_WRITE(V4) {
+  printTime(2, param);
+}
+BLYNK_WRITE(V12) {
+  Pwm_A3 = param.asInt() * 10.23;
+  Serial.print("PWM C1: ");
+  Serial.println(Pwm_A3);
+}
+BLYNK_WRITE(V13) {
+  Pwm_B3 = param.asInt() * 10.23;
+  Serial.print("PWM C1: ");
+  Serial.println(Pwm_B3);
+}
+BLYNK_WRITE(V14) {
+  Pwm_C3 = param.asInt() * 10.23;
+  Serial.print("PWM C1: ");
+  Serial.println(Pwm_C3);
+}
+
+//input nilai presentase & waktu moon light / end time
+BLYNK_WRITE(V5) {
+  printTime(3, param);
+}
+BLYNK_WRITE(V15) {
+  Pwm_A4 = param.asInt() * 10.23;
+  Serial.print("PWM C1: ");
+  Serial.println(Pwm_A4);
+}
+BLYNK_WRITE(V16) {
+  Pwm_B4 = param.asInt() * 10.23;
+  Serial.print("PWM C1: ");
+  Serial.println(Pwm_B4);
+}
+BLYNK_WRITE(V17) {
+  Pwm_C4 = param.asInt() * 10.23;
+  Serial.print("PWM C1: ");
+  Serial.println(Pwm_C4);
+}
+
 
 void adjustAndFadePWM() {
   int currentHour = hour();
