@@ -37,10 +37,10 @@ String Pwm_C4 = 0;
 
 float Nilai_Suhu;
 
-String timeSunrise;
-String timePagi;
-String timeSiang;
-String timeSore;
+String time_sunrise;
+String time_daylight;
+String time_sunset;
+String time_moonlight;
 
 void setup() {
   Serial.begin(9600);
@@ -82,23 +82,23 @@ void printTime(int pin, BlynkParam param) {
 
   switch (pin) {
     case 0:
-      timeSunrise = String(WAKTU);
+      time_sunrise = String(WAKTU);
       break;
     case 1:
-      timePagi = String(WAKTU);
+      time_daylight = String(WAKTU);
       break;
     case 2:
-      timeSiang = String(WAKTU);
+      time_sunset = String(WAKTU);
       break;
     case 3:
-      timeSore = String(WAKTU);
+      time_moonlight = String(WAKTU);
       break;
   }
 
-  Serial.println("Waktu Sunrise: " + timeSunrise);
-  Serial.println("Waktu Pagi: " + timePagi);
-  Serial.println("Waktu Siang: " + timeSiang);
-  Serial.println("Waktu Sore: " + timeSore);
+  Serial.println("Waktu Sunrise: " + time_sunrise);
+  Serial.println("Waktu Dayligt: " + time_daylight);
+  Serial.println("Waktu Sunset: " + time_sunset);
+  Serial.println("Waktu Moonlight: " + time_moonlight);
 }
 
 //input nilai set suhu
