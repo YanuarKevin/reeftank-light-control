@@ -41,7 +41,6 @@ String timeSunrise;
 String timePagi;
 String timeSiang;
 String timeSore;
-String timeSunset;
 
 void setup() {
   Serial.begin(9600);
@@ -51,8 +50,7 @@ void setup() {
 
   Blynk.begin(auth, ssid, pass, "iot.serangkota.go.id", 8080);
   timeClient.begin();
-  for (int i = 0; i <= 19; i++) Blynk.syncVirtual(i);
-  Blynk.syncVirtual(26);
+  for (int i = 1; i <= 17; i++) Blynk.syncVirtual(i);
 }
 
 void loop() {
@@ -70,8 +68,8 @@ void updateTime() {
 }
 
 BLYNK_CONNECTED() {
-  for (int i = 0; i <= 19; i++) Blynk.syncVirtual(i);
-  Blynk.syncVirtual(26);
+  for (int i = 1; i <= 17; i++) Blynk.syncVirtual(i);
+  // Blynk.syncVirtual(26);
 }
 
 void printTime(int pin, BlynkParam param) {
@@ -95,16 +93,12 @@ void printTime(int pin, BlynkParam param) {
     case 3:
       timeSore = String(WAKTU);
       break;
-    case 4:
-      timeSunset = String(WAKTU);
-      break;
   }
 
   Serial.println("Waktu Sunrise: " + timeSunrise);
   Serial.println("Waktu Pagi: " + timePagi);
   Serial.println("Waktu Siang: " + timeSiang);
   Serial.println("Waktu Sore: " + timeSore);
-  Serial.println("Waktu Sunset: " + timeSunset);
 }
 
 //input nilai set suhu
@@ -198,36 +192,30 @@ BLYNK_WRITE(V17) {
 void adjustAndFadePWM() {
   int currentHour = hour();
   int currentMinute = minute();
-  int currentSecond = second();
 
   int sunriseHour = getHourFromString(timeSunrise);
   int sunriseMinute = getMinuteFromString(timeSunrise);
-  int sunriseSecond = getSecondFromString(timeSunrise);
+
   int pagiHour = getHourFromString(timePagi);
   int pagiMinute = getMinuteFromString(timePagi);
-  int pagiSecond = getSecondFromString(timePagi);
+  
   int siangHour = getHourFromString(timeSiang);
   int siangMinute = getMinuteFromString(timeSiang);
-  int siangSecond = getSecondFromString(timeSiang);
+
   int soreHour = getHourFromString(timeSore);
   int soreMinute = getMinuteFromString(timeSore);
-  int soreSecond = getSecondFromString(timeSore);
-  int sunsetHour = getHourFromString(timeSunset);
-  int sunsetMinute = getMinuteFromString(timeSunset);
-  int sunsetSecond = getSecondFromString(timeSunset);
+ 
 
-  if (currentHour == sunriseHour && currentMinute == sunriseMinute && currentSecond == sunriseSecond) {
+  if (currentHour == sunriseHour && currentMinute == sunriseMinute) {
     pwmValue_1 = Pwm_A1;
     pwmValue_2 = Pwm_B1;
     pwmValue_3 = Pwm_C1;
-  } else if (currentHour == pagiHour && currentMinute == pagiMinute && currentSecond == pagiSecond) {
+  } else if (currentHour == pagiHour && currentMinute == pagiMinute) {
     sigmoidFade(Pwm_A1, Pwm_A2, Pwm_B1, Pwm_B2, Pwm_C1, Pwm_C2);
-  } else if (currentHour == siangHour && currentMinute == siangMinute && currentSecond == siangSecond) {
+  } else if (currentHour == siangHour && currentMinute == siangMinute) {
     sigmoidFade(Pwm_A2, Pwm_A3, Pwm_B2, Pwm_B3, Pwm_C2, Pwm_C3);
-  } else if (currentHour == soreHour && currentMinute == soreMinute && currentSecond == soreSecond) {
+  } else if (currentHour == soreHour && currentMinute == soreMinute) {
     sigmoidFade(Pwm_A3, Pwm_A4, Pwm_B3, Pwm_B4, Pwm_C3, Pwm_C4);
-  } else if (currentHour == sunsetHour && currentMinute == sunsetMinute && currentSecond == sunsetSecond) {
-    sigmoidFade(Pwm_A4, Pwm_A5, Pwm_B4, Pwm_B5, Pwm_C4, Pwm_C5);
   } else {
     pwmValue_1 = pwmValue_1;
     pwmValue_2 = pwmValue_2;
@@ -266,47 +254,7 @@ float sigmoid(float x) {
 void sendLCDMessage() {
   char currentTime[9];
   sprintf(currentTime, "%02d:%02d:%02d", hour(), minute(), second());
-  lcd1.print(0, 0, timeSunrise);
-  lcd1.print(13, 0, "    ");
-  lcd1.print(10, 0, "A=" + String(Pwm_A1));
-  lcd1.print(4, 1, "    ");
-  lcd1.print(1, 1, "B=" + String(Pwm_B1));
-  lcd1.print(11, 1, "    ");
-  lcd1.print(9, 1, "C=" + String(Pwm_C1));
-
-  lcd2.print(0, 0, timePagi);
-  lcd2.print(13, 0, "    ");
-  lcd2.print(10, 0, "A=" + String(Pwm_A2));
-  lcd2.print(4, 1, "    ");
-  lcd2.print(1, 1, "B=" + String(Pwm_B2));
-  lcd2.print(11, 1, "    ");
-  lcd2.print(9, 1, "C=" + String(Pwm_C2));
-
-  lcd3.print(0, 0, timeSiang);
-  lcd3.print(13, 0, "    ");
-  lcd3.print(10, 0, "A=" + String(Pwm_A3));
-  lcd3.print(4, 1, "    ");
-  lcd3.print(1, 1, "B=" + String(Pwm_B3));
-  lcd3.print(11, 1, "    ");
-  lcd3.print(9, 1, "C=" + String(Pwm_C3));
-
-  lcd4.print(0, 0, timeSore);
-  lcd4.print(13, 0, "    ");
-  lcd4.print(10, 0, "A=" + String(Pwm_A4));
-  lcd4.print(4, 1, "    ");
-  lcd4.print(1, 1, "B=" + String(Pwm_B4));
-  lcd4.print(11, 1, "    ");
-  lcd4.print(9, 1, "C=" + String(Pwm_C4));
-
-  lcd5.print(0, 0, timeSunset);
-  lcd5.print(13, 0, "    ");
-  lcd5.print(10, 0, "A=" + String(Pwm_A5));
-  lcd5.print(4, 1, "    ");
-  lcd5.print(1, 1, "B=" + String(Pwm_B5));
-  lcd5.print(11, 1, "    ");
-  lcd5.print(9, 1, "C=" + String(Pwm_C5));
-
-  lcd6.print(0, 0, currentTime);
+  lcd1.print(0, 0, currentTime);
 }
 
 int getHourFromString(String timeString) {
@@ -320,10 +268,4 @@ int getMinuteFromString(String timeString) {
   int colonIndex2 = timeString.lastIndexOf(':');
   String minuteString = timeString.substring(colonIndex1 + 1, colonIndex2);
   return minuteString.toInt();
-}
-
-int getSecondFromString(String timeString) {
-  int colonIndex = timeString.lastIndexOf(':');
-  String secondString = timeString.substring(colonIndex + 1);
-  return secondString.toInt();
 }
