@@ -41,6 +41,9 @@ String time_daylight;
 String time_sunset;
 String time_moonlight;
 
+unsigned long previousMillis = 0;
+const long interval = 60000;  // Interval pemeriksaan waktu dalam milidetik
+
 void setup() {
   Serial.begin(9600);
   pinMode(PWM_PIN_1, OUTPUT);
@@ -193,6 +196,9 @@ BLYNK_WRITE(V17) {
 
 // RUBAH NILAI PWM
 void adjustAndFadePWM() {
+ unsigned long currentMillis = millis();
+ if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
 // MENDAPATKAN VARIABEL JAM & MENIT
   int currentHour = hour();
   int currentMinute = minute();
@@ -222,9 +228,9 @@ void adjustAndFadePWM() {
     Pwm_A4 = pwmValue_1;
     Pwm_B4 = pwmValue_2;
     Pwm_C4 = pwmValue_3;
-    analogWrite(LED_PIN1, pwmValue_1);
-    analogWrite(LED_PIN2, pwmValue_2);
-    analogWrite(LED_PIN3, pwmValue_3);
+    analogWrite(PWM_PIN_1, (int)pwmValue_1);
+    analogWrite(PWM_PIN_2, (int)pwmValue_2);
+    analogWrite(PWM_PIN_3, (int)pwmValue_3);
   }
 // ..................................BATAS............................................
 
@@ -236,29 +242,46 @@ void adjustAndFadePWM() {
   // Serial.println("PWM 1: " + String(pwmValue_1));
   // Serial.println("PWM 2: " + String(pwmValue_2));
   // Serial.println("PWM 3: " + String(pwmValue_3));
+ }
 }
 // ..................................BATAS............................................
 
-// MERUBAH DENGAN HALUS
-void sigmoidFade(float pwm1_start, float pwm1_end, float pwm2_start, float pwm2_end, float pwm3_start, float pwm3_end) {
-  float t = 0.0;
-  while (t <= 1.0) {
-    float pwm1 = pwm1_start + (pwm1_end - pwm1_start) * sigmoid(t);
-    float pwm2 = pwm2_start + (pwm2_end - pwm2_start) * sigmoid(t);
-    float pwm3 = pwm3_start + (pwm3_end - pwm3_start) * sigmoid(t);
+void sigmoidFade(int startA, int endA, int startB, int endB, int startC, int endC) {
+  int duration = 3600000;  // Durasi 1 jam dalam milidetik
+  int steps = 1000;
+  for (int i = 0; i <= steps; i++) {
+    float progress = (float)i / (float)steps;
+    float fadeA = startA + (endA - startA) * (0.5 * (1 + tanh(12 * (progress - 0.5))));
+    float fadeB = startB + (endB - startB) * (0.5 * (1 + tanh(12 * (progress - 0.5))));
+    float fadeC = startC + (endC - startC) * (0.5 * (1 + tanh(12 * (progress - 0.5))));
     
-    analogWrite(PWM_PIN_1, pwm1);
-    analogWrite(PWM_PIN_2, pwm2);
-    analogWrite(PWM_PIN_3, pwm3);
-    
-    t += 0.01;
-    delay(10);
+    analogWrite(PWM_PIN_1, (int)fadeA);
+    analogWrite(PWM_PIN_2, (int)fadeB);
+    analogWrite(PWM_PIN_3, (int)fadeC);
+
+    delay(duration / steps);
   }
 }
+// MERUBAH DENGAN HALUS
+// void sigmoidFade(float pwm1_start, float pwm1_end, float pwm2_start, float pwm2_end, float pwm3_start, float pwm3_end) {
+//   float t = 0.0;
+//   while (t <= 1.0) {
+//     float pwm1 = pwm1_start + (pwm1_end - pwm1_start) * sigmoid(t);
+//     float pwm2 = pwm2_start + (pwm2_end - pwm2_start) * sigmoid(t);
+//     float pwm3 = pwm3_start + (pwm3_end - pwm3_start) * sigmoid(t);
+    
+//     analogWrite(PWM_PIN_1, pwm1);
+//     analogWrite(PWM_PIN_2, pwm2);
+//     analogWrite(PWM_PIN_3, pwm3);
+    
+//     t += 0.01;
+//     delay(10);
+//   }
+// }
 
-float sigmoid(float x) {
-  return 1 / (1 + exp(-x));
-}
+// float sigmoid(float x) {
+//   return 1 / (1 + exp(-x));
+// }
 // ..................................BATAS............................................
 
 // KIRIM KE LCD BLYNK
