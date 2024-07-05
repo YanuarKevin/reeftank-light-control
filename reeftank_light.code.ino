@@ -208,9 +208,10 @@ void adjustAndFadePWM() {
   
 //PROSES MERUBAH NILAI PWM 
   if (currentHour == sunrise_Hour && currentMinute == sunrise_Minute) {
-    pwmValue_1 = Pwm_A1;
-    pwmValue_2 = Pwm_B1;
-    pwmValue_3 = Pwm_C1;
+    // pwmValue_1 = Pwm_A1;
+    // pwmValue_2 = Pwm_B1;
+    // pwmValue_3 = Pwm_C1;
+    sigmoidFade(pwmValue_1, Pwm_A1, pwmValue_2, Pwm_B1, pwmValue_3, Pwm_1); 
   } else if (currentHour == daylight_Hour && currentMinute == daylight_Minute) {
     sigmoidFade(Pwm_A1, Pwm_A2, Pwm_B1, Pwm_B2, Pwm_C1, Pwm_C2); 
   } else if (currentHour == sunset_Hour && currentMinute == sunset_Minute) {
@@ -218,20 +219,23 @@ void adjustAndFadePWM() {
   } else if (currentHour == moonlight_Hour && currentMinute == moonlight_Minute) {
     sigmoidFade(Pwm_A3, Pwm_A4, Pwm_B3, Pwm_B4, Pwm_C3, Pwm_C4);
   } else {
-    pwmValue_1 = pwmValue_1;
-    pwmValue_2 = pwmValue_2;
-    pwmValue_3 = pwmValue_3;
+    Pwm_A4 = pwmValue_1;
+    Pwm_B4 = pwmValue_2;
+    Pwm_C4 = pwmValue_3;
+    analogWrite(LED_PIN1, pwmValue_1);
+    analogWrite(LED_PIN2, pwmValue_2);
+    analogWrite(LED_PIN3, pwmValue_3);
   }
 // ..................................BATAS............................................
 
 // MENETAPKAN NILAI PWM KE PWM 
-  analogWrite(PWM_PIN_1, pwmValue_1);
-  analogWrite(PWM_PIN_2, pwmValue_2);
-  analogWrite(PWM_PIN_3, pwmValue_3);
+  // analogWrite(PWM_PIN_1, pwmValue_1);
+  // analogWrite(PWM_PIN_2, pwmValue_2);
+  // analogWrite(PWM_PIN_3, pwmValue_3);
 
-  Serial.println("PWM 1: " + String(pwmValue_1));
-  Serial.println("PWM 2: " + String(pwmValue_2));
-  Serial.println("PWM 3: " + String(pwmValue_3));
+  // Serial.println("PWM 1: " + String(pwmValue_1));
+  // Serial.println("PWM 2: " + String(pwmValue_2));
+  // Serial.println("PWM 3: " + String(pwmValue_3));
 }
 // ..................................BATAS............................................
 
