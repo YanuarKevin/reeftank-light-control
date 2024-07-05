@@ -107,6 +107,7 @@ BLYNK_WRITE(V1) {
   Serial.print("SUHU: ");
   Serial.println(Nilai_Suhu, 1);
 }
+// ..................................BATAS............................................
 
 //input nilai presentase & waktu sunrise
 BLYNK_WRITE(V2) {
@@ -127,6 +128,7 @@ BLYNK_WRITE(V8) {
   Serial.print("PWM C1: ");
   Serial.println(Pwm_C1);
 }
+// ..................................BATAS............................................
 
 //input nilai presentase & waktu day light
 BLYNK_WRITE(V3) {
@@ -134,19 +136,20 @@ BLYNK_WRITE(V3) {
 }
 BLYNK_WRITE(V9) {
   Pwm_A2 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
+  Serial.print("PWM A2: ");
   Serial.println(Pwm_A2);
 }
 BLYNK_WRITE(V10) {
   Pwm_B2 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
+  Serial.print("PWM B2: ");
   Serial.println(Pwm_B2);
 }
 BLYNK_WRITE(V11) {
   Pwm_C2 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
+  Serial.print("PWM C2: ");
   Serial.println(Pwm_C2);
 }
+// ..................................BATAS............................................
 
 //input nilai presentase & waktu sunrise
 BLYNK_WRITE(V4) {
@@ -154,19 +157,20 @@ BLYNK_WRITE(V4) {
 }
 BLYNK_WRITE(V12) {
   Pwm_A3 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
+  Serial.print("PWM A3: ");
   Serial.println(Pwm_A3);
 }
 BLYNK_WRITE(V13) {
   Pwm_B3 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
+  Serial.print("PWM B3: ");
   Serial.println(Pwm_B3);
 }
 BLYNK_WRITE(V14) {
   Pwm_C3 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
+  Serial.print("PWM C3: ");
   Serial.println(Pwm_C3);
 }
+// ..................................BATAS............................................
 
 //input nilai presentase & waktu moon light / end time
 BLYNK_WRITE(V5) {
@@ -174,54 +178,55 @@ BLYNK_WRITE(V5) {
 }
 BLYNK_WRITE(V15) {
   Pwm_A4 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
+  Serial.print("PWM A4: ");
   Serial.println(Pwm_A4);
 }
 BLYNK_WRITE(V16) {
   Pwm_B4 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
+  Serial.print("PWM B4: ");
   Serial.println(Pwm_B4);
 }
 BLYNK_WRITE(V17) {
   Pwm_C4 = param.asInt() * 10.23;
-  Serial.print("PWM C1: ");
+  Serial.print("PWM C4: ");
   Serial.println(Pwm_C4);
 }
+// ..................................BATAS............................................
 
-
+// RUBAH NILAI PWM
 void adjustAndFadePWM() {
+// MENDAPATKAN VARIABEL JAM & MENIT
   int currentHour = hour();
   int currentMinute = minute();
-
-  int sunriseHour = getHourFromString(timeSunrise);
-  int sunriseMinute = getMinuteFromString(timeSunrise);
-
-  int pagiHour = getHourFromString(timePagi);
-  int pagiMinute = getMinuteFromString(timePagi);
+  int sunrise_Hour = getHourFromString(time_sunrise);
+  int sunrise_Minute = getMinuteFromString(time_sunrise);
+  int daylight_Hour = getHourFromString(time_daylight);
+  int daylight_Minute = getMinuteFromString(time_daylight);
+  int sunset_Hour = getHourFromString(time_sunset);
+  int sunset_Minute = getMinuteFromString(time_sunset);
+  int moonlight_Hour = getHourFromString(time_moonlight);
+  int moonlight_Minute = getMinuteFromString(time_moonlight);
+// ..................................BATAS............................................
   
-  int siangHour = getHourFromString(timeSiang);
-  int siangMinute = getMinuteFromString(timeSiang);
-
-  int soreHour = getHourFromString(timeSore);
-  int soreMinute = getMinuteFromString(timeSore);
- 
-
-  if (currentHour == sunriseHour && currentMinute == sunriseMinute) {
+//PROSES MERUBAH NILAI PWM 
+  if (currentHour == sunrise_Hour && currentMinute == sunrise_Minute) {
     pwmValue_1 = Pwm_A1;
     pwmValue_2 = Pwm_B1;
     pwmValue_3 = Pwm_C1;
-  } else if (currentHour == pagiHour && currentMinute == pagiMinute) {
-    sigmoidFade(Pwm_A1, Pwm_A2, Pwm_B1, Pwm_B2, Pwm_C1, Pwm_C2);
-  } else if (currentHour == siangHour && currentMinute == siangMinute) {
+  } else if (currentHour == daylight_Hour && currentMinute == daylight_Minute) {
+    sigmoidFade(Pwm_A1, Pwm_A2, Pwm_B1, Pwm_B2, Pwm_C1, Pwm_C2); 
+  } else if (currentHour == sunset_Hour && currentMinute == sunset_Minute) {
     sigmoidFade(Pwm_A2, Pwm_A3, Pwm_B2, Pwm_B3, Pwm_C2, Pwm_C3);
-  } else if (currentHour == soreHour && currentMinute == soreMinute) {
+  } else if (currentHour == moonlight_Hour && currentMinute == moonlight_Minute) {
     sigmoidFade(Pwm_A3, Pwm_A4, Pwm_B3, Pwm_B4, Pwm_C3, Pwm_C4);
   } else {
     pwmValue_1 = pwmValue_1;
     pwmValue_2 = pwmValue_2;
     pwmValue_3 = pwmValue_3;
   }
+// ..................................BATAS............................................
 
+// MENETAPKAN NILAI PWM KE PWM 
   analogWrite(PWM_PIN_1, pwmValue_1);
   analogWrite(PWM_PIN_2, pwmValue_2);
   analogWrite(PWM_PIN_3, pwmValue_3);
@@ -230,7 +235,9 @@ void adjustAndFadePWM() {
   Serial.println("PWM 2: " + String(pwmValue_2));
   Serial.println("PWM 3: " + String(pwmValue_3));
 }
+// ..................................BATAS............................................
 
+// MERUBAH DENGAN HALUS
 void sigmoidFade(float pwm1_start, float pwm1_end, float pwm2_start, float pwm2_end, float pwm3_start, float pwm3_end) {
   float t = 0.0;
   while (t <= 1.0) {
@@ -250,22 +257,29 @@ void sigmoidFade(float pwm1_start, float pwm1_end, float pwm2_start, float pwm2_
 float sigmoid(float x) {
   return 1 / (1 + exp(-x));
 }
+// ..................................BATAS............................................
 
+// KIRIM KE LCD BLYNK
 void sendLCDMessage() {
   char currentTime[9];
   sprintf(currentTime, "%02d:%02d:%02d", hour(), minute(), second());
   lcd1.print(0, 0, currentTime);
 }
+// ..................................BATAS............................................
 
+// RUBAH VARIABEL KE JAM
 int getHourFromString(String timeString) {
   int colonIndex = timeString.indexOf(':');
   String hourString = timeString.substring(0, colonIndex);
   return hourString.toInt();
 }
+// ..................................BATAS............................................
 
+// RUBAH VARIABEL KE MENIT
 int getMinuteFromString(String timeString) {
   int colonIndex1 = timeString.indexOf(':');
   int colonIndex2 = timeString.lastIndexOf(':');
   String minuteString = timeString.substring(colonIndex1 + 1, colonIndex2);
   return minuteString.toInt();
 }
+// ..................................BATAS............................................
