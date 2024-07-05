@@ -18,23 +18,22 @@ NTPClient timeClient(ntpUDP, "pool.ntp.org", 25200, 60000);  // 25200 seconds fo
 #define PWM_PIN_2 13
 #define PWM_PIN_3 14
 
-String pwmValue_1 = 0;
-String pwmValue_2 = 0;
-String pwmValue_3 = 0;
+float pwmValue_1;
+float pwmValue_2;
+float pwmValue_3;
 
-String Pwm_A1 = 0;
-String Pwm_B1 = 0;
-String Pwm_C1 = 0;
-String Pwm_A2 = 0;
-String Pwm_B2 = 0;
-String Pwm_C2 = 0;
-String Pwm_A3 = 0;
-String Pwm_B3 = 0;
-String Pwm_C3 = 0;
-String Pwm_A4 = 0;
-String Pwm_B4 = 0;
-String Pwm_C4 = 0;
-
+float Pwm_A1;
+float Pwm_B1;
+float Pwm_C1;
+float Pwm_A2;
+float Pwm_B2;
+float Pwm_C2;
+float Pwm_A3;
+float Pwm_B3;
+float Pwm_C3;
+float Pwm_A4;
+float Pwm_B4;
+float Pwm_C4;
 float Nilai_Suhu;
 
 String time_sunrise;
@@ -47,7 +46,6 @@ void setup() {
   pinMode(PWM_PIN_1, OUTPUT);
   pinMode(PWM_PIN_2, OUTPUT);
   pinMode(PWM_PIN_3, OUTPUT);
-
   Blynk.begin(auth, ssid, pass, "iot.serangkota.go.id", 8080);
   timeClient.begin();
   for (int i = 1; i <= 17; i++) Blynk.syncVirtual(i);
@@ -69,7 +67,7 @@ void updateTime() {
 
 BLYNK_CONNECTED() {
   for (int i = 1; i <= 17; i++) Blynk.syncVirtual(i);
-  // Blynk.syncVirtual(26);
+  // Blynk.syncVirtual(20);
 }
 
 void printTime(int pin, BlynkParam param) {
