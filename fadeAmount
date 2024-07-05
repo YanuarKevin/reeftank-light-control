@@ -1,0 +1,44 @@
+#define LED_PIN1 5  // Pin D1 pada NodeMCU
+#define LED_PIN2 4  // Pin D2 pada NodeMCU
+#define LED_PIN3 0  // Pin D3 pada NodeMCU
+
+int fadeAmount = 1;  // Jumlah perubahan per siklus
+int delayTime = 3515;  // Delay dalam milidetik per iterasi
+
+void setup() {
+  pinMode(LED_PIN1, OUTPUT);
+  pinMode(LED_PIN2, OUTPUT);
+  pinMode(LED_PIN3, OUTPUT);
+
+  // Hitung dan tampilkan waktu total untuk sunrise
+  int numIterations = (1023 / fadeAmount) + 1;  // Tambahkan 1 karena kita mulai dari 0
+  int totalTime = numIterations * delayTime;  // Total waktu dalam milidetik
+  Serial.begin(115200);
+  Serial.print("Total time for sunrise: ");
+  Serial.print(totalTime);
+  Serial.println(" milliseconds");
+}
+
+void loop() {
+  // Gradual sunrise
+  for (int i = 0; i <= 1023; i += fadeAmount) {
+    analogWrite(LED_PIN1, i);
+    analogWrite(LED_PIN2, i);
+    analogWrite(LED_PIN3, i);
+    delay(delayTime);  // Ubah delay untuk mengatur kecepatan perubahan
+  }
+
+  // Full daylight
+  delay(5000);  // Simulasikan siang hari dengan LED pada intensitas penuh selama 5 detik
+
+  // Gradual sunset
+  for (int i = 1023; i >= 0; i -= fadeAmount) {
+    analogWrite(LED_PIN1, i);
+    analogWrite(LED_PIN2, i);
+    analogWrite(LED_PIN3, i);
+    delay(delayTime);  // Ubah delay untuk mengatur kecepatan perubahan
+  }
+
+  // Night time (LED off)
+  delay(5000);  // Simulasikan malam hari dengan LED mati selama 5 detik
+}
