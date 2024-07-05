@@ -246,7 +246,7 @@ void adjustAndFadePWM() {
 }
 // ..................................BATAS............................................
 
-void sigmoidFade(int startA, int endA, int startB, int endB, int startC, int endC) {
+void sigmoidFade(float startA, float endA, float startB, float endB, float startC, float endC) {
   int duration = 3600000;  // Durasi 1 jam dalam milidetik
   int steps = 1000;
   for (int i = 0; i <= steps; i++) {
